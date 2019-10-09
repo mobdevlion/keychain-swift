@@ -138,11 +138,12 @@ open class KeychainSwift {
   Retrieves the text value from the keychain that corresponds to the given key.
   
   - parameter key: The key that is used to read the keychain item.
+  - parameter promptMessage: Message system will show to the user.
   - returns: The text value from the keychain. Returns nil if unable to read the item.
   
   */
-  open func get(_ key: String) -> String? {
-    if let data = getData(key) {
+  open func get(_ key: String, promptMessage: String? = nil) -> String? {
+    if let data = getData(key, promptMessage: promptMessage) {
       
       if let currentString = String(data: data, encoding: .utf8) {
         return currentString
@@ -160,10 +161,11 @@ open class KeychainSwift {
   
   - parameter key: The key that is used to read the keychain item.
   - parameter asReference: If true, returns the data as reference (needed for things like NEVPNProtocol).
+  - parameter promptMessage: Message system will show to the user.
   - returns: The text value from the keychain. Returns nil if unable to read the item.
   
   */
-  open func getData(_ key: String, asReference: Bool = false) -> Data? {
+  open func getData(_ key: String, asReference: Bool = false, promptMessage: String? = nil) -> Data? {
     // The lock prevents the code to be run simlultaneously
     // from multiple threads which may result in crashing
     lock.lock()
@@ -185,6 +187,7 @@ open class KeychainSwift {
     
     query = addAccessGroupWhenPresent(query)
     query = addSynchronizableIfRequired(query, addingItems: false)
+    query[KeychainSwiftConstants.useOperationPrompt] = promptMessage
     lastQueryParameters = query
     
     var result: AnyObject?
@@ -205,11 +208,12 @@ open class KeychainSwift {
   Retrieves the boolean value from the keychain that corresponds to the given key.
 
   - parameter key: The key that is used to read the keychain item.
+  - parameter promptMessage: Message system will show to the user.
   - returns: The boolean value from the keychain. Returns nil if unable to read the item.
 
   */
-  open func getBool(_ key: String) -> Bool? {
-    guard let data = getData(key) else { return nil }
+  open func getBool(_ key: String, promptMessage: String? = nil) -> Bool? {
+    guard let data = getData(key, promptMessage: promptMessage) else { return nil }
     guard let firstBit = data.first else { return nil }
     return firstBit == 1
   }

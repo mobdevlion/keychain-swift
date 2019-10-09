@@ -31,6 +31,9 @@ public struct KeychainSwiftConstants {
   /// Used for specifying a value when setting a Keychain value.
   public static var valueData: String { return toString(kSecValueData) }
     
+  /// Used for specifying a prompt message when authenticating user for an operation.
+  public static var useOperationPrompt: String { return toString(kSecUseOperationPrompt) }
+
   /// Used for returning a reference to the data from the keychain
   public static var returnReference: String { return toString(kSecReturnPersistentRef) }
   
